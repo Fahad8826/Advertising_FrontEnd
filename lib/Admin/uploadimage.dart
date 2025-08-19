@@ -148,6 +148,7 @@ class _ImageUploadPageState extends State<ImageUploadPage> {
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
+          
           children: [
             _image != null
                 ? Image.file(_image!, height: 200)

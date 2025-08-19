@@ -1,7 +1,9 @@
 import 'package:advertising_app/Admin/addcategoreys.dart';
 import 'package:advertising_app/Admin/listimages.dart';
 import 'package:advertising_app/Admin/uploadimage.dart';
+import 'package:advertising_app/Admin/vedios.dart';
 import 'package:advertising_app/sigin.dart';
+import 'package:advertising_app/subscritipons.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -14,28 +16,6 @@ class ListUsersPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text("List All Users")),
       body: const Center(child: Text("List All Users Page")),
-    );
-  }
-}
-
-class SubscriptionPage extends StatelessWidget {
-  const SubscriptionPage({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("Subscription")),
-      body: const Center(child: Text("Subscription Page")),
-    );
-  }
-}
-
-class UploadVideoPage extends StatelessWidget {
-  const UploadVideoPage({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("Upload Video")),
-      body: const Center(child: Text("Upload Video Page")),
     );
   }
 }
@@ -89,7 +69,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
         page = const ListUsersPage();
         break;
       case 'Subscription':
-        page = const SubscriptionPage();
+        page = const UserSubscriptionPage();
         break;
       case 'Upload Video':
         page = const UploadVideoPage();

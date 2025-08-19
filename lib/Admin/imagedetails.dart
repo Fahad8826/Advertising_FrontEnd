@@ -23,8 +23,12 @@ class _ImageDetailPageState extends State<ImageDetailPage> {
   @override
   void initState() {
     super.initState();
-    categoryController = TextEditingController(text: widget.image.category.toString());
-    subcategoryController = TextEditingController(text: widget.image.subcategory.toString());
+    categoryController = TextEditingController(
+      text: widget.image.category.toString(),
+    );
+    subcategoryController = TextEditingController(
+      text: widget.image.subcategory.toString(),
+    );
   }
 
   Future<String?> _getToken() async {
@@ -35,58 +39,74 @@ class _ImageDetailPageState extends State<ImageDetailPage> {
   Future<void> updateImage() async {
     final token = await _getToken();
     if (token == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("You must log in first")),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("You must log in first")));
       return;
     }
 
-    final url = Uri.parse("${dotenv.env['BASE_URL']}/images/${widget.image.id}/");
+    final url = Uri.parse(
+      "${dotenv.env['BASE_URL']}/images/${widget.image.id}/",
+    );
     var request = http.MultipartRequest('PATCH', url);
     request.headers['Authorization'] = 'Bearer $token';
 
-    request.fields['category'] = categoryController.text;
-    request.fields['subcategory'] = subcategoryController.text;
+    request.fields['category_name'] = categoryController.text;
+    request.fields['subcategory_name'] = subcategoryController.text;
 
     if (selectedImage != null) {
-      request.files.add(await http.MultipartFile.fromPath('image', selectedImage!.path));
+      request.files.add(
+        await http.MultipartFile.fromPath('image', selectedImage!.path),
+      );
     }
 
     var response = await request.send();
     if (response.statusCode == 200) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Image updated")));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Image updated")));
       Navigator.pop(context, true);
     } else if (response.statusCode == 401) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Unauthorized. Please log in again.")));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Unauthorized. Please log in again.")),
+      );
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Failed to update")));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Failed to update")));
     }
   }
 
   Future<void> deleteImage() async {
     final token = await _getToken();
     if (token == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("You must log in first")),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("You must log in first")));
       return;
     }
 
-    final url = Uri.parse("${dotenv.env['BASE_URL']}/images/${widget.image.id}/");
+    final url = Uri.parse(
+      "${dotenv.env['BASE_URL']}/images/${widget.image.id}/",
+    );
     final response = await http.delete(
       url,
-      headers: {
-        'Authorization': 'Bearer $token',
-      },
+      headers: {'Authorization': 'Bearer $token'},
     );
 
     if (response.statusCode == 204) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Image deleted")));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Image deleted")));
       Navigator.pop(context, true);
     } else if (response.statusCode == 401) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Unauthorized. Please log in again.")));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Unauthorized. Please log in again.")),
+      );
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Failed to delete")));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Failed to delete")));
     }
   }
 
@@ -112,10 +132,12 @@ class _ImageDetailPageState extends State<ImageDetailPage> {
                 ? Image.file(selectedImage!, height: 150)
                 : Image.network(widget.image.imageUrl, height: 150),
             TextField(
+              readOnly: true,
               controller: categoryController,
               decoration: const InputDecoration(labelText: 'Category'),
             ),
             TextField(
+              readOnly: true,
               controller: subcategoryController,
               decoration: const InputDecoration(labelText: 'Subcategory'),
             ),

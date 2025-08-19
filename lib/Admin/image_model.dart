@@ -1,8 +1,8 @@
 class ImageModel {
   final int id;
   final String imageUrl;
-  final int? category; // Nullable
-  final int? subcategory; // Nullable
+  final String? category; // Nullable
+  final String? subcategory; // Nullable
   final int? user; // Nullable
 
   ImageModel({
@@ -17,8 +17,8 @@ class ImageModel {
     return ImageModel(
       id: json['id'] as int,
       imageUrl: json['image'] ?? '',
-      category: json['category'] as int?, // safe cast
-      subcategory: json['subcategory'] as int?,
+      category: json['category_name'] ?? '', // safe cast
+      subcategory: json['subcategory_name'] ?? '', // safe cast
       user: json['user'] as int?,
     );
   }
