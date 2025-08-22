@@ -49,7 +49,7 @@ class _LoginPageState extends State<LoginPage> {
         if (isStaff) {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => HomePage()),
+            MaterialPageRoute(builder: (context) => AdminHomePage()),
           );
         } else {
           Navigator.pushReplacement(

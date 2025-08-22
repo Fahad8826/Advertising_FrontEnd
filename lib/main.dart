@@ -68,10 +68,10 @@ class _AuthWrapperState extends State<AuthWrapper> {
       bool isStaff = userData!['user']['is_staff'] ?? false;
 
       // Navigate based on is_staff
-      if (isStaff) {
-        return const HomePage(); // regular user
+      if (isStaff == true) {
+        return const AdminHomePage(); // admin
       } else {
-        return const AdminHomePage(); // admin user
+        return const AdminHomePage(); //  user normal
       }
     } else {
       return const LoginPage();

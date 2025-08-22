@@ -1,18 +1,22 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class User {
   final int id;
   final String username;
   final String email;
   bool isActive;
+  final bool isStaff;
 
   User({
     required this.id,
     required this.username,
     required this.email,
     required this.isActive,
+    this.isStaff = false,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -21,6 +25,7 @@ class User {
       username: json['username'],
       email: json['email'] ?? '',
       isActive: json['is_active'] ?? false,
+      isStaff: json['is_staff'] ?? false,
     );
   }
 }
@@ -33,7 +38,7 @@ class UsersPage extends StatefulWidget {
 }
 
 class _UsersPageState extends State<UsersPage> {
-  final String baseUrl = "http://192.168.20.5:8000/users/";
+  final String baseUrl = dotenv.env['BASE_URL'] ?? '';
   List<User> users = [];
   bool isLoading = true;
 
@@ -43,9 +48,22 @@ class _UsersPageState extends State<UsersPage> {
     fetchUsers();
   }
 
+  Future<String?> _getToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('access');
+  }
+
   Future<void> fetchUsers() async {
     try {
-      final response = await http.get(Uri.parse(baseUrl));
+      final token = await _getToken();
+      final response = await http.get(
+        Uri.parse("${baseUrl}/users/"),
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $token",
+        },
+      );
+
       if (response.statusCode == 200) {
         final List data = json.decode(response.body);
         setState(() {
@@ -53,7 +71,7 @@ class _UsersPageState extends State<UsersPage> {
           isLoading = false;
         });
       } else {
-        throw Exception('Failed to load users');
+        throw Exception('Failed to load users: ${response.body}');
       }
     } catch (e) {
       print("Error fetching users: $e");
@@ -62,11 +80,16 @@ class _UsersPageState extends State<UsersPage> {
   }
 
   Future<void> toggleUserStatus(User user) async {
-    final url = Uri.parse("$baseUrl${user.id}/");
+    final token = await _getToken();
+    final url = Uri.parse("${baseUrl}/edit-user/${user.id}/");
+
     try {
       final response = await http.patch(
         url,
-        headers: {"Content-Type": "application/json"},
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $token",
+        },
         body: jsonEncode({"is_active": !user.isActive}),
       );
 
@@ -93,14 +116,18 @@ class _UsersPageState extends State<UsersPage> {
               itemBuilder: (context, index) {
                 final user = users[index];
                 return ListTile(
-                  leading: CircleAvatar(child: Text(user.username[0].toUpperCase())),
+                  leading: CircleAvatar(
+                    child: Text(user.username[0].toUpperCase()),
+                  ),
                   title: Text(user.username),
                   subtitle: Text(user.email),
                   trailing: Switch(
                     value: user.isActive,
-                    onChanged: (value) {
-                      toggleUserStatus(user);
-                    },
+                    onChanged: (user.isStaff == true)
+                        ? null // disables toggle for staff/current user
+                        : (value) {
+                            toggleUserStatus(user); // your update API call
+                          },
                   ),
                 );
               },

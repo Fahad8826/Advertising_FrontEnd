@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:advertising_app/Admin/Adminhome.dart';
 import 'package:advertising_app/home.dart';
 import 'package:advertising_app/signupcontroller.dart';
 import 'package:flutter/material.dart';
@@ -52,7 +53,7 @@ class _SignUpPageState extends State<SignUpPage> {
       if (response.statusCode == 201) {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => HomePage()),
+          MaterialPageRoute(builder: (context) => AdminHomePage()),
         );
         ScaffoldMessenger.of(
           context,
