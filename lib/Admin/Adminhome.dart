@@ -8,18 +8,20 @@ import 'package:advertising_app/subscritipons.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'carousel.dart';
+
 // Placeholder pages for each admin feature
 
-class ReportsPage extends StatelessWidget {
-  const ReportsPage({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("Reports")),
-      body: const Center(child: Text("Reports Page")),
-    );
-  }
-}
+// class ReportsPage extends StatelessWidget {
+//   const ReportsPage({super.key});
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(title: const Text("Reports")),
+//       body: const Center(child: Text("Reports Page")),
+//     );
+//   }
+// }
 
 // Main Admin Home Page
 class AdminHomePage extends StatefulWidget {
@@ -64,8 +66,8 @@ class _AdminHomePageState extends State<AdminHomePage> {
       case 'Upload Video':
         page = const UploadVideoPage();
         break;
-      case 'Reports':
-        page = const ReportsPage();
+      case 'Carousel':
+        page = const CarouselUpdatePage();
         break;
       default:
         page = const Scaffold(body: Center(child: Text("Page not found")));
@@ -84,7 +86,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
       {'title': 'List All Users', 'icon': Icons.people},
       {'title': 'Subscription', 'icon': Icons.subscriptions},
       {'title': 'Upload Video', 'icon': Icons.video_call},
-      {'title': 'Reports', 'icon': Icons.analytics},
+      {'title': 'Carousel', 'icon': Icons.analytics},
     ];
 
     return Scaffold(
